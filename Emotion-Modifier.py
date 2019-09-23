@@ -1,4 +1,7 @@
+import sys
 import random
+import pygame
+from pygame.locals import *
 
 
 # Just a small script that returns an emotion into the console.
@@ -453,5 +456,60 @@ emotions = ['Absorbed',
 'Zest']
 
 result = random.randint(0, (len(emotions)-1))
-print('resulting number ' + str(result) + ' Out of ' + str(len(emotions) - 1))
-print(emotions[result])
+
+pygame.init()
+
+clock = pygame.time.Clock()
+
+width = 800
+height = 600
+
+black = (0, 0, 0)
+white = (255, 255, 255)
+
+selecing = False
+
+textFont = pygame.font.SysFont(None, 36)
+
+textToDisplay = textFont.render(str(emotions[result]), True, black)
+
+offset = len(emotions[result]) * 2
+
+window = pygame.display.set_mode((width, height))
+
+background = pygame.image.load('Background.gif')
+handleUp = pygame.image.load('Handle.gif')
+handleDown = pygame.image.load('HandleDown.gif')
+
+pygame.display.set_caption("Emotional Roulette")
+
+while True:
+    keysPressed = pygame.key.get_pressed()
+
+    window.fill(white)
+
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+
+        if event.type == KEYDOWN and event.key == K_ESCAPE:
+            pygame.quit()
+            sys.exit()
+
+    if keysPressed[K_SPACE]:
+        selecing = True
+        result = random.randint(0, (len(emotions)-1))
+        textToDisplay = textFont.render(str(emotions[result]), True, black)
+        offset = textToDisplay.get_rect().width
+    if selecing:
+        window.blit(handleDown, (0, 0))
+
+    else:
+        window.blit(handleUp, (0, 0))
+
+    selecing = False
+    window.blit(background, (0, 0))
+    window.blit(textToDisplay, ((width - offset)/2, (height/2 - 18)))
+    pygame.display.update()
+    clock.tick(100)
