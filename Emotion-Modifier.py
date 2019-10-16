@@ -510,6 +510,7 @@ while True:
 
     selecing = False
     window.blit(background, (0, 0))
+    offset = textToDisplay.get_rect().width
     window.blit(textToDisplay, ((width - offset)/2, (height/2 - 18)))
     pygame.display.update()
     clock.tick(100)
